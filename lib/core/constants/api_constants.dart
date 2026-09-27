@@ -5,7 +5,10 @@ class ApiConstants {
   static const String productsEndpoint = '/products';
   static const String searchEndpoint = '/products/search';
 
-  static Uri getProductsUri({int limit = 30, int skip = 0}) {
+  static Uri getProductsUri({
+    int limit = AppConstants.paginationLimit,
+    int skip = 0,
+  }) {
     return Uri.parse('$baseUrl$productsEndpoint?limit=$limit&skip=$skip');
   }
 

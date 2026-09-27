@@ -7,7 +7,10 @@ import 'package:product_store/core/services/api_client.dart';
 import 'package:product_store/features/products/data/models/product_model.dart';
 
 abstract class ProductRepository {
-  Future<List<Product>> getProducts({int limit = 30, int skip = 0});
+  Future<List<Product>> getProducts({
+    int limit = AppConstants.paginationLimit,
+    int skip = 0,
+  });
   Future<List<Product>> searchProducts(
     String query, {
     int limit = AppConstants.paginationLimit,
@@ -21,7 +24,10 @@ class ProductRepositoryImpl implements ProductRepository {
   ProductRepositoryImpl({required this.apiClient});
 
   @override
-  Future<List<Product>> getProducts({int limit = 30, int skip = 0}) async {
+  Future<List<Product>> getProducts({
+    int limit = AppConstants.paginationLimit,
+    int skip = 0,
+  }) async {
     try {
       final uri = ApiConstants.getProductsUri(limit: limit, skip: skip);
       final response = await apiClient.get(uri);

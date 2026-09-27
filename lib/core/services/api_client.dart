@@ -14,6 +14,7 @@ class ApiClient {
     Uri uri, {
     Duration timeout = const Duration(seconds: 10),
   }) async {
+    print(uri);
     try {
       final response = await _client.get(uri).timeout(timeout);
 
