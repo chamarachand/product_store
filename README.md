@@ -144,7 +144,7 @@ This keeps API and data-access logic separated from the presentation layer and m
 
 ---
 
-# Future Improvements
+## Future Improvements
 
 - Adding product cart functionality.
 - Adding light/dark theme toggle
