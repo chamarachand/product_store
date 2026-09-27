@@ -4,6 +4,7 @@ import 'package:product_store/features/products/data/models/product_model.dart';
 import 'package:product_store/features/products/presentation/cubit/product_cubit.dart';
 import 'package:product_store/features/products/presentation/cubit/product_state.dart';
 import 'package:product_store/features/products/presentation/widgets/product_card.dart';
+import 'package:product_store/features/products/presentation/widgets/search_box.dart';
 
 class ProductListScreen extends StatelessWidget {
   const ProductListScreen({super.key});
@@ -22,7 +23,7 @@ class ProductListScreen extends StatelessWidget {
           Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 500),
-              child: const SizedBox.shrink(),
+              child: const SearchBox(),
             ),
           ),
           Expanded(

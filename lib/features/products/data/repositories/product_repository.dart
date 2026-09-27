@@ -42,14 +42,11 @@ class ProductRepositoryImpl implements ProductRepository {
     int skip = 0,
   }) async {
     try {
-      final trimmedQuery = query.trim();
-      final uri = trimmedQuery.isEmpty
-          ? ApiConstants.getProductsUri(limit: limit, skip: skip)
-          : ApiConstants.getSearchProductsUri(
-              trimmedQuery,
-              limit: limit,
-              skip: skip,
-            );
+      final uri = ApiConstants.getSearchProductsUri(
+        query,
+        limit: limit,
+        skip: skip,
+      );
 
       final response = await apiClient.get(uri);
       final Map<String, dynamic> data =
