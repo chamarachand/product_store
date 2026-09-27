@@ -15,50 +15,42 @@ class ProductCubit extends Cubit<ProductState> {
     required this.favoritesRepository,
   }) : super(ProductInitial());
 
-  Future<void> loadProducts() async {
-    final currentQuery = state is ProductsLoaded
-        ? (state as ProductsLoaded).searchQuery
-        : '';
+  String get _currentSearchQuery =>
+      state is ProductsLoaded ? (state as ProductsLoaded).searchQuery : '';
 
-    emit(ProductsLoading());
+  Future<void> getProducts({
+    bool isRefresh = false,
+    bool clearQuery = false,
+  }) async {
+    final query = clearQuery ? '' : _currentSearchQuery;
+
+    await _loadProducts(query, showLoading: !isRefresh);
+  }
+
+  Future<void> searchProducts(String query) async {
+    final trimmed = query.trim();
+    await _loadProducts(trimmed, showLoading: true);
+  }
+
+  Future<void> _loadProducts(String query, {required bool showLoading}) async {
+    if (showLoading) emit(ProductsLoading());
 
     try {
-      final products = await productRepository.getProducts();
       final savedFavourites = favoritesRepository.getFavouriteIds();
+      final products = query.isEmpty
+          ? await productRepository.getProducts()
+          : await productRepository.searchProducts(query);
 
       emit(
         ProductsLoaded(
           products: products,
-          searchQuery: currentQuery,
+          searchQuery: query,
           favouriteIds: savedFavourites,
         ),
       );
     } on AppException catch (e) {
       emit(ProductsError(e.message));
-    } catch (e) {
-      emit(ProductsError("Something went wrong. Please try again."));
-    }
-  }
-
-  Future<void> searchProducts(String query) async {
-    final trimmedQuery = query.trim();
-    if (trimmedQuery.isEmpty) {
-      await loadProducts();
-      return;
-    }
-
-    emit(ProductsLoading());
-
-    try {
-      final products = await productRepository.searchProducts(trimmedQuery);
-      if (products.isEmpty) {
-        emit(ProductsLoaded(products: [], searchQuery: trimmedQuery));
-      } else {
-        emit(ProductsLoaded(products: products, searchQuery: trimmedQuery));
-      }
-    } on AppException catch (e) {
-      emit(ProductsError(e.message));
-    } catch (e) {
+    } catch (_) {
       emit(ProductsError("Something went wrong. Please try again."));
     }
   }

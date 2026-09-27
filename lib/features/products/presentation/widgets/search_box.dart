@@ -22,8 +22,9 @@ class _SearchBoxState extends State<SearchBox> {
   }
 
   void _clearSearch() {
+    _debounceTimer?.cancel();
     _searchController.clear();
-    context.read<ProductCubit>().loadProducts();
+    context.read<ProductCubit>().searchProducts('');
     setState(() {});
   }
 
@@ -37,7 +38,7 @@ class _SearchBoxState extends State<SearchBox> {
       if (trimmed.isNotEmpty) {
         context.read<ProductCubit>().searchProducts(value);
       } else {
-        context.read<ProductCubit>().loadProducts();
+        context.read<ProductCubit>().getProducts(clearQuery: true);
       }
     });
   }

@@ -46,7 +46,7 @@ class ProductListScreen extends StatelessWidget {
                 if (state is ProductsError) {
                   return _ProductErrorView(
                     msg: state.message,
-                    onRetry: () => context.read<ProductCubit>().loadProducts(),
+                    onRetry: () => context.read<ProductCubit>().getProducts(),
                   );
                 }
 
@@ -192,7 +192,7 @@ class _ProductsGridViewState extends State<_ProductsGridView> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        await context.read<ProductCubit>().loadProducts();
+        await context.read<ProductCubit>().getProducts(isRefresh: true);
       },
       child: CustomScrollView(
         controller: _scrollController,

@@ -19,9 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => getIt<ProductCubit>()..loadProducts(),
-        ),
+        BlocProvider(create: (context) => getIt<ProductCubit>()..getProducts()),
       ],
       child: MaterialApp(
         title: 'Product Store',
