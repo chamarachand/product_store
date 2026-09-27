@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:product_store/features/products/data/repositories/review.dart';
+import 'package:product_store/features/products/data/models/review.dart';
 
 class ReviewsSection extends StatelessWidget {
   final List<Review> reviews;

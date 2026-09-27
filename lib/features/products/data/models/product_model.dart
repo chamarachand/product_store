@@ -1,4 +1,4 @@
-import 'package:product_store/features/products/data/repositories/review.dart';
+import 'package:product_store/features/products/data/models/review.dart';
 
 class Product {
   final int id;
