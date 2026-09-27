@@ -94,3 +94,19 @@ class Product {
   @override
   int get hashCode => id.hashCode;
 }
+
+class ProductResponse {
+  final List<Product> products;
+
+  const ProductResponse({required this.products});
+
+  factory ProductResponse.fromJson(Map<String, dynamic> json) {
+    final rawProducts = json['products'] as List<dynamic>? ?? [];
+    final products = rawProducts
+        .whereType<Map<String, dynamic>>()
+        .map(Product.fromJson)
+        .toList();
+
+    return ProductResponse(products: products);
+  }
+}
