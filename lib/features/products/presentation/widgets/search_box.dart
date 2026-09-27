@@ -17,6 +17,7 @@ class _SearchBoxState extends State<SearchBox> {
 
   @override
   void dispose() {
+    _debounceTimer?.cancel();
     _searchController.dispose();
     super.dispose();
   }
