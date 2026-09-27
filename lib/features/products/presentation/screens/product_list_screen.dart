@@ -29,6 +29,15 @@ class ProductListScreen extends StatelessWidget {
           ),
           Expanded(
             child: BlocBuilder<ProductCubit, ProductState>(
+              buildWhen: (prev, curr) {
+                if (prev is ProductsLoaded && curr is ProductsLoaded) {
+                  return prev.products != curr.products ||
+                      prev.searchQuery != curr.searchQuery ||
+                      prev.isLast != curr.isLast ||
+                      prev.isLoadingMore != curr.isLoadingMore;
+                }
+                return true;
+              },
               builder: (context, state) {
                 if (state is ProductsLoading) {
                   return const Center(child: CircularProgressIndicator());
@@ -198,22 +207,31 @@ class _ProductsGridViewState extends State<_ProductsGridView> {
               ),
               delegate: SliverChildBuilderDelegate((context, index) {
                 final product = widget.displayProducts[index];
-                final isFavourite = widget.favouriteIds.contains(product.id);
 
-                return ProductCard(
-                  product: product,
-                  isFavourite: isFavourite,
-                  onFavouriteToggle: () {
-                    context.read<ProductCubit>().toggleFavourite(product.id);
-                  },
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
+                return BlocSelector<ProductCubit, ProductState, bool>(
+                  selector: (state) => state is ProductsLoaded
+                      ? state.favouriteIds.contains(product.id)
+                      : false,
+                  builder: (context, isFavourite) {
+                    return ProductCard(
+                      product: product,
+                      isFavourite: isFavourite,
+                      onFavouriteToggle: () {
+                        context.read<ProductCubit>().toggleFavourite(
+                          product.id,
+                        );
+                      },
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ProductDetailsScreen(product: product),
-                      ),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                ProductDetailsScreen(product: product),
+                          ),
+                        );
+                      },
                     );
                   },
                 );
