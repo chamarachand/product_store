@@ -1,3 +1,5 @@
+import 'package:product_store/features/products/data/repositories/review.dart';
+
 class Product {
   final int id;
   final String title;
@@ -17,6 +19,7 @@ class Product {
   final String warrantyInformation;
   final String shippingInformation;
   final String returnPolicy;
+  final List<Review> reviews;
 
   const Product({
     required this.id,
@@ -37,6 +40,7 @@ class Product {
     this.warrantyInformation = '',
     this.shippingInformation = '',
     this.returnPolicy = '',
+    this.reviews = const [],
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -68,30 +72,12 @@ class Product {
       warrantyInformation: json['warrantyInformation'] as String? ?? '',
       shippingInformation: json['shippingInformation'] as String? ?? '',
       returnPolicy: json['returnPolicy'] as String? ?? '',
+      reviews:
+          (json['reviews'] as List?)
+              ?.map((e) => Review.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'category': category,
-      'price': price,
-      'discountPercentage': discountPercentage,
-      'rating': rating,
-      'stock': stock,
-      'brand': brand,
-      'sku': sku,
-      'thumbnail': thumbnail,
-      'images': images,
-      'tags': tags,
-      'weight': weight,
-      'availabilityStatus': availabilityStatus,
-      'warrantyInformation': warrantyInformation,
-      'shippingInformation': shippingInformation,
-      'returnPolicy': returnPolicy,
-    };
   }
 
   @override

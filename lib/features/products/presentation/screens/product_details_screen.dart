@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_store/core/constants/app_constants.dart';
 import 'package:product_store/features/products/data/models/product_model.dart';
+import 'package:product_store/features/products/data/repositories/review.dart';
 import 'package:product_store/features/products/presentation/cubit/product_cubit.dart';
 import 'package:product_store/features/products/presentation/cubit/product_state.dart';
 
@@ -51,43 +52,48 @@ class ProductDetailsScreen extends StatelessWidget {
               builder: (context, constraints) {
                 final isWideScreen = constraints.maxWidth > 600;
 
-                if (isWideScreen) {
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 4,
-                        child: _ProductImage(
-                          product: product,
-                          isWideScreen: isWideScreen,
-                        ),
-                      ),
-                      const SizedBox(width: 30),
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _ProductInfo(product: product),
-                            const Divider(height: 48),
-                            _SpecificationsSection(product: product),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                } else {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (isWideScreen)
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: _ProductImage(
+                              product: product,
+                              isWideScreen: isWideScreen,
+                            ),
+                          ),
+                          const SizedBox(width: 30),
+                          Expanded(
+                            flex: 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _ProductInfo(product: product),
+                                const Divider(height: 48),
+                                _SpecificationsSection(product: product),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+                    else ...[
                       _ProductImage(product: product, isWideScreen: false),
                       const SizedBox(height: 24),
                       _ProductInfo(product: product),
                       const SizedBox(height: 24),
                       _SpecificationsSection(product: product),
                     ],
-                  );
-                }
+
+                    if (product.reviews.isNotEmpty) ...[
+                      const Divider(height: 48),
+                      _ReviewsSection(reviews: product.reviews),
+                    ],
+                  ],
+                );
               },
             ),
           ),
@@ -265,6 +271,95 @@ class _SpecRow extends StatelessWidget {
           Expanded(child: Text(value, style: valueStyle)),
         ],
       ),
+    );
+  }
+}
+
+class _ReviewsSection extends StatelessWidget {
+  final List<Review> reviews;
+
+  const _ReviewsSection({required this.reviews});
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Customer Reviews (${reviews.length})',
+          style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: reviews.length,
+          separatorBuilder: (context, index) => const Divider(height: 24),
+          itemBuilder: (context, index) {
+            final review = reviews[index];
+            return _ReviewCard(review: review);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _ReviewCard extends StatelessWidget {
+  final Review review;
+
+  const _ReviewCard({required this.review});
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    String? formattedDate;
+    if (review.date != null) {
+      formattedDate =
+          '${review.date!.year}-${review.date!.month.toString().padLeft(2, '0')}-${review.date!.day.toString().padLeft(2, '0')}';
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                review.reviewerName,
+                style: textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            if (formattedDate != null)
+              Text(
+                formattedDate,
+                style: textTheme.bodySmall?.copyWith(color: Colors.grey),
+              ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: List.generate(
+            5,
+            (index) => Icon(
+              index < review.rating ? Icons.star : Icons.star_border,
+              color: Colors.amber,
+              size: 16,
+            ),
+          ),
+        ),
+        if (review.comment.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Text(review.comment, style: textTheme.bodyMedium),
+        ],
+      ],
     );
   }
 }
