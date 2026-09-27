@@ -61,23 +61,16 @@ class ProductDetailsScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            flex: 4,
+                            flex: 5,
                             child: _ProductImage(
                               product: product,
                               isWideScreen: isWideScreen,
                             ),
                           ),
-                          const SizedBox(width: 30),
+                          const SizedBox(width: 40),
                           Expanded(
-                            flex: 5,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ProductInfo(product: product),
-                                const Divider(height: 48),
-                                SpecificationsSection(product: product),
-                              ],
-                            ),
+                            flex: 6,
+                            child: ProductInfo(product: product),
                           ),
                         ],
                       )
@@ -85,9 +78,10 @@ class ProductDetailsScreen extends StatelessWidget {
                       _ProductImage(product: product, isWideScreen: false),
                       const SizedBox(height: 24),
                       ProductInfo(product: product),
-                      const SizedBox(height: 24),
-                      SpecificationsSection(product: product),
                     ],
+
+                    const Divider(height: 48),
+                    SpecificationsSection(product: product),
 
                     if (product.reviews.isNotEmpty) ...[
                       const Divider(height: 48),
@@ -119,7 +113,7 @@ class _ProductImage extends StatelessWidget {
           imageUrl: product.images.isNotEmpty
               ? product.images.first
               : product.thumbnail,
-          height: isWideScreen ? 400 : 300,
+          height: isWideScreen ? 450 : 300,
           fit: BoxFit.contain,
           fadeInDuration: Duration.zero,
           placeholder: (context, url) => CachedNetworkImage(
