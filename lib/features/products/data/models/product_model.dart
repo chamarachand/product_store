@@ -8,6 +8,7 @@ class Product {
   final double rating;
   final int stock;
   final String? brand;
+  final String sku;
   final String thumbnail;
   final List<String> images;
   final List<String> tags;
@@ -15,6 +16,7 @@ class Product {
   final String availabilityStatus;
   final String warrantyInformation;
   final String shippingInformation;
+  final String returnPolicy;
 
   const Product({
     required this.id,
@@ -26,6 +28,7 @@ class Product {
     required this.rating,
     required this.stock,
     this.brand,
+    this.sku = '',
     required this.thumbnail,
     required this.images,
     this.tags = const [],
@@ -33,6 +36,7 @@ class Product {
     this.availabilityStatus = '',
     this.warrantyInformation = '',
     this.shippingInformation = '',
+    this.returnPolicy = '',
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -47,6 +51,7 @@ class Product {
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       stock: (json['stock'] as num?)?.toInt() ?? 0,
       brand: json['brand'] as String?,
+      sku: json['sku'] as String? ?? '',
       thumbnail: json['thumbnail'] as String? ?? '',
       images:
           (json['images'] as List<dynamic>?)
@@ -62,6 +67,7 @@ class Product {
       availabilityStatus: json['availabilityStatus'] as String? ?? '',
       warrantyInformation: json['warrantyInformation'] as String? ?? '',
       shippingInformation: json['shippingInformation'] as String? ?? '',
+      returnPolicy: json['returnPolicy'] as String? ?? '',
     );
   }
 
@@ -76,6 +82,7 @@ class Product {
       'rating': rating,
       'stock': stock,
       'brand': brand,
+      'sku': sku,
       'thumbnail': thumbnail,
       'images': images,
       'tags': tags,
@@ -83,6 +90,7 @@ class Product {
       'availabilityStatus': availabilityStatus,
       'warrantyInformation': warrantyInformation,
       'shippingInformation': shippingInformation,
+      'returnPolicy': returnPolicy,
     };
   }
 
@@ -102,6 +110,7 @@ class ProductResponse {
 
   factory ProductResponse.fromJson(Map<String, dynamic> json) {
     final rawProducts = json['products'] as List<dynamic>? ?? [];
+
     final products = rawProducts
         .whereType<Map<String, dynamic>>()
         .map(Product.fromJson)

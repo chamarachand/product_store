@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_store/features/products/data/models/product_model.dart';
 import 'package:product_store/features/products/presentation/cubit/product_cubit.dart';
 import 'package:product_store/features/products/presentation/cubit/product_state.dart';
+import 'package:product_store/features/products/presentation/screens/product_details_screen.dart';
 import 'package:product_store/features/products/presentation/widgets/product_card.dart';
 import 'package:product_store/features/products/presentation/widgets/search_box.dart';
 
@@ -205,7 +206,16 @@ class _ProductsGridViewState extends State<_ProductsGridView> {
                   onFavouriteToggle: () {
                     context.read<ProductCubit>().toggleFavourite(product.id);
                   },
-                  onTap: () => FocusScope.of(context).unfocus(),
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProductDetailsScreen(product: product),
+                      ),
+                    );
+                  },
                 );
               }, childCount: widget.displayProducts.length),
             ),
