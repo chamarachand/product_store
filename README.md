@@ -4,6 +4,8 @@
 
 A Flutter application that displays a catalogue of products with a dedicated details page. The app also supports product search and favourite products
 
+**Effort:** ~4 hours
+
 The app has two main screens:
 
 - **Product List** — Displays all products in a responsive grid view containing the product image, name, price, category, and favourite toggle. Also includes a search bar that allows users to search products by name in real time
@@ -57,7 +59,7 @@ The generated APK will be available at:
 | Package                  | Purpose                                                            |
 | ------------------------ | ------------------------------------------------------------------ |
 | `http`                   | HTTP client for communicating with the REST APIs.                  |
-| `flutter_bloc`           | State management using Cubits.                                     |
+| `flutter_bloc`           | State management.                                                  |
 | `cached_network_image`   | Loads and caches network images.                                   |
 | `shared_preferences`     | Persists favorite product IDs locally.                             |
 | `get_it`                 | Dependency injection.                                              |
