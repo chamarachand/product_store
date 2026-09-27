@@ -7,17 +7,17 @@ abstract class FavoritesRepository {
 }
 
 class FavoritesRepositoryImpl implements FavoritesRepository {
-  final LocalStorageService _localStorageService;
+  final LocalStorageService localStorageService;
 
-  FavoritesRepositoryImpl({required this._localStorageService});
+  FavoritesRepositoryImpl({required this.localStorageService});
 
   @override
   Set<int> getFavouriteIds() {
-    return _localStorageService.getFavouriteIds();
+    return localStorageService.getFavouriteIds();
   }
 
   @override
   Future<void> saveFavouriteIds(Set<int> favouriteIds) async {
-    await _localStorageService.saveFavouriteIds(favouriteIds);
+    await localStorageService.saveFavouriteIds(favouriteIds);
   }
 }
