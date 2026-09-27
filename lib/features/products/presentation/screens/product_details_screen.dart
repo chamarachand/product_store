@@ -134,6 +134,13 @@ class _ProductInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final hasDiscount = product.discountPercentage > 0;
+
+    final originalPrice = hasDiscount
+        ? product.price / (1 - (product.discountPercentage / 100))
+        : product.price;
+
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: Column(
@@ -141,13 +148,54 @@ class _ProductInfo extends StatelessWidget {
         children: [
           Text(product.title, style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 12),
-          Text(
-            '${AppConstants.currency}${product.price.toStringAsFixed(2)}',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              // Current Price
+              Text(
+                '${AppConstants.currency}${product.price.toStringAsFixed(2)}',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+
+              // Strikethrough Original Price
+              if (hasDiscount) ...[
+                Text(
+                  '${AppConstants.currency}${originalPrice.toStringAsFixed(2)}',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    decoration: TextDecoration.lineThrough,
+                    color: Colors.grey,
+                  ),
+                ),
+
+                // Discount Badge
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade100,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    '-${product.discountPercentage.toStringAsFixed(0)}%',
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
+
           const SizedBox(height: 16),
           Chip(label: Text(product.category.toUpperCase())),
           const SizedBox(height: 24),

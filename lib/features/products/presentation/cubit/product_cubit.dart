@@ -23,7 +23,6 @@ class ProductCubit extends Cubit<ProductState> {
     bool clearQuery = false,
   }) async {
     final query = clearQuery ? '' : _currentSearchQuery;
-
     await _loadProducts(query, showLoading: !isRefresh);
   }
 
