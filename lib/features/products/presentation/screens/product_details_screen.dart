@@ -180,10 +180,10 @@ class _SpecificationsSection extends StatelessWidget {
           style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
-        // _SpecRow(label: 'Brand', value: product.brand),
+        if (product.brand != null)
+          _SpecRow(label: 'Brand', value: product.brand!),
         _SpecRow(label: 'SKU', value: product.sku),
         _SpecRow(label: 'Weight', value: '${product.weight} Kg'),
-        //_SpecRow(label: 'Dimensions', value: product.dimensions),
         _SpecRow(label: 'Availability', value: product.availabilityStatus),
         _SpecRow(label: 'Warranty', value: product.warrantyInformation),
         _SpecRow(label: 'Shipping', value: product.shippingInformation),
