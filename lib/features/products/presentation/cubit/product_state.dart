@@ -1,21 +1,31 @@
-import 'package:flutter/material.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:product_store/features/products/data/models/product_model.dart';
 
 @immutable
-sealed class ProductState {}
+sealed class ProductState extends Equatable {
+  const ProductState();
 
-class ProductInitial extends ProductState {}
+  @override
+  List<Object?> get props => [];
+}
 
-class ProductsLoading extends ProductState {}
+final class ProductInitial extends ProductState {
+  const ProductInitial();
+}
 
-class ProductsLoaded extends ProductState {
+final class ProductsLoading extends ProductState {
+  const ProductsLoading();
+}
+
+final class ProductsLoaded extends ProductState {
   final List<Product> products;
   final Set<int> favouriteIds;
   final String searchQuery;
   final bool isLast;
   final bool isLoadingMore;
 
-  ProductsLoaded({
+  const ProductsLoaded({
     required this.products,
     this.favouriteIds = const {},
     this.searchQuery = '',
@@ -38,10 +48,22 @@ class ProductsLoaded extends ProductState {
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    products,
+    favouriteIds,
+    searchQuery,
+    isLast,
+    isLoadingMore,
+  ];
 }
 
-class ProductsError extends ProductState {
+final class ProductsError extends ProductState {
   final String message;
 
-  ProductsError(this.message);
+  const ProductsError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }
