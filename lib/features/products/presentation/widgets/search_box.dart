@@ -23,7 +23,7 @@ class _SearchBoxState extends State<SearchBox> {
 
   void _clearSearch() {
     _searchController.clear();
-    context.read<ProductCubit>().searchProducts('');
+    context.read<ProductCubit>().loadProducts();
     setState(() {});
   }
 

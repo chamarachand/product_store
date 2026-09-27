@@ -1,3 +1,5 @@
+import 'package:product_store/core/constants/app_constants.dart';
+
 class ApiConstants {
   static const String baseUrl = 'https://dummyjson.com';
   static const String productsEndpoint = '/products';
@@ -9,7 +11,7 @@ class ApiConstants {
 
   static Uri getSearchProductsUri(
     String query, {
-    int limit = 30,
+    int limit = AppConstants.paginationLimit,
     int skip = 0,
   }) {
     return Uri.parse(

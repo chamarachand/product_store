@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:product_store/core/constants/api_constants.dart';
+import 'package:product_store/core/constants/app_constants.dart';
 import 'package:product_store/core/errors/app_exception.dart';
 import 'package:product_store/core/services/api_client.dart';
 import 'package:product_store/features/products/data/models/product_model.dart';
@@ -9,7 +10,7 @@ abstract class ProductRepository {
   Future<List<Product>> getProducts({int limit = 30, int skip = 0});
   Future<List<Product>> searchProducts(
     String query, {
-    int limit = 30,
+    int limit = AppConstants.paginationLimit,
     int skip = 0,
   });
 }
@@ -38,7 +39,7 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<List<Product>> searchProducts(
     String query, {
-    int limit = 30,
+    int limit = AppConstants.paginationLimit,
     int skip = 0,
   }) async {
     try {

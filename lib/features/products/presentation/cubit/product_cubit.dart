@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:product_store/core/constants/app_constants.dart';
 import 'package:product_store/core/errors/app_exception.dart';
 import 'package:product_store/features/products/data/repositories/favourites_repository.dart';
 import 'package:product_store/features/products/data/repositories/product_repository.dart';
@@ -7,6 +8,7 @@ import 'package:product_store/features/products/presentation/cubit/product_state
 class ProductCubit extends Cubit<ProductState> {
   final ProductRepository productRepository;
   final FavoritesRepository favoritesRepository;
+  static const int _limit = AppConstants.paginationLimit;
 
   ProductCubit({
     required this.productRepository,
@@ -75,6 +77,43 @@ class ProductCubit extends Cubit<ProductState> {
       emit(currentState.copyWith(favouriteIds: favouriteIds));
 
       await favoritesRepository.saveFavouriteIds(favouriteIds);
+    }
+  }
+
+  Future<void> loadMoreProducts() async {
+    if (state is! ProductsLoaded) return;
+    final currentState = state as ProductsLoaded;
+
+    if (currentState.isLast || currentState.isLoadingMore) return;
+
+    emit(currentState.copyWith(isLoadingMore: true));
+
+    try {
+      final currentLength = currentState.products.length;
+      final newProducts = currentState.searchQuery.isEmpty
+          ? await productRepository.getProducts(
+              limit: _limit,
+              skip: currentLength,
+            )
+          : await productRepository.searchProducts(
+              currentState.searchQuery,
+              limit: _limit,
+              skip: currentLength,
+            );
+
+      if (newProducts.isEmpty) {
+        emit(currentState.copyWith(isLast: true, isLoadingMore: false));
+      } else {
+        emit(
+          currentState.copyWith(
+            products: List.of(currentState.products)..addAll(newProducts),
+            isLast: newProducts.length < _limit,
+            isLoadingMore: false,
+          ),
+        );
+      }
+    } catch (_) {
+      emit(currentState.copyWith(isLoadingMore: false));
     }
   }
 }
